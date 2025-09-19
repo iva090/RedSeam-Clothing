@@ -5,5 +5,4 @@
 </script>
 
 <main>
-    <Header />
 </main>

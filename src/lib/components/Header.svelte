@@ -8,16 +8,16 @@
     }
 </script>
 
-<AppBar background="bg-[#f8f6f7]">
+<AppBar background="bg-[#f8f6f7]" base="h-[80px]">
     {#snippet lead()}
-        <div class="ml-5 flex items-center gap-2">
-            <img src={logo} alt="logo" class="h-5">
-            <strong class="text-l text-black">RedSeam Clothing</strong>
+        <div class="ml-5 mt-2.5 flex gap-2 items-center justify-center">
+            <img src={logo} alt="logo" class="h-6">
+            <p class="text-l text-black font-semibold">RedSeam Clothing</p>
         </div>
     {/snippet}
     {#snippet trail()}
-        <div class="mr-10 flex items-center gap-5">
-            <img src={user} alt="user" class="h-5">
+        <div class="mr-10 mt-2.5 flex gap-5 align-middle">
+            <img src={user} alt="user" class="h-6">
             <button onclick={changePage} class="text-l text-black">Log In</button>
         </div>
     {/snippet}
