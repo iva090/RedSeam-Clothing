@@ -1,7 +1,7 @@
 <script>
-    import regImg from "../assets/reg-img.png"
+    import regImg from "$lib/assets/reg-img.png"
     import ChooseAvatar from "$lib/components/chooseAvatar.svelte";
-	import Inputs from "$lib/components/Inputs.svelte";
+	import RegInputs from "$lib/components/RegInputs.svelte";
 </script>
 
 <div class="min-h-screen flex overflow-hidden">
@@ -17,13 +17,13 @@
                 </div>
             </div>
             <div class="flex flex-col gap-4">
-                <Inputs />
+                <RegInputs />
             </div>
             <div class="flex justify-center rounded-lg bg-[#ff4000] mt-[46px] h-[41px]">
-                <button>Register</button>
+                <button class="text-white">Register</button>
             </div>
             <div class="mt-6 flex justify-center">
-                <p>Already member? <a class="text-[#ff4000] font-[600]">Log In</a></p>
+                <p>Already member? <a href="/login" class="text-[#ff4000] font-[600]">Log In</a></p>
             </div>
         </div>
         
