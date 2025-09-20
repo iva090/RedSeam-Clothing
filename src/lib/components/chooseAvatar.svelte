@@ -6,14 +6,21 @@
 
 	function choosePfp(e) {
 		let image = e.target.files[0];
+		if (!image) return;
 		let reader = new FileReader();
 		reader.readAsDataURL(image);
 		reader.onload = (e) => {
 			avatar = e.target.result;
 		};
+		if (image == Avatar) return;
+		reader.onerror = (e) => {
+			console.error('Error reading file:', e);
+		};
+		e.target.value = '';
 	}
+
 	function removePfp(e) {
-		avatar = Avatar
+		avatar = Avatar;
 	}
 </script>
 

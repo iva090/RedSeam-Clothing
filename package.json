@@ -38,6 +38,7 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
-		"@fontsource/poppins": "^5.2.7"
+		"@fontsource/poppins": "^5.2.7",
+		"axios": "^1.12.2"
 	}
 }
