@@ -1,19 +1,22 @@
 <script>
-	import { goto } from "$app/navigation";
-	import { api } from "$lib/axios/axios";
+	import { goto } from '$app/navigation';
+	import { api } from '$lib/axios/axios';
+	import Avatar from '../assets/regUser.png';
 
-	let { 
-		usernameValue = $bindable(""),
-		emailValue = $bindable(""),
-		passwordValue = $bindable(""),
-		confirmPasswordValue = $bindable(""),
-		avatar = $bindable(null)
+
+	let fileinput = $state();
+	let {
+		usernameValue = $bindable(''),
+		emailValue = $bindable(''),
+		passwordValue = $bindable(''),
+		confirmPasswordValue = $bindable(''),
+		avatar = $bindable(Avatar)
 	} = $props();
 
 	let passwordVisible = $state(false);
 	let confirmPasswordVisible = $state(false);
 	let isLoading = $state(false);
-	let errorMessage = $state("");
+	let errorMessage = $state('');
 
 	function togglePassword() {
 		passwordVisible = !passwordVisible;
@@ -23,20 +26,44 @@
 		confirmPasswordVisible = !confirmPasswordVisible;
 	}
 
+	function choosePfp(e) {
+		let image = e.target.files[0];
+		if (!image) return;
+		let reader = new FileReader();
+		reader.readAsDataURL(image);
+		reader.onload = (e) => {
+			avatar = e.target.result;
+		};
+		if (image == Avatar) return;
+		reader.onerror = (e) => {
+			console.error('Error reading file:', e);
+		};
+		e.target.value = '';
+	}
+
+	function removePfp() {
+		avatar = Avatar;
+	}
+
 	function validateForm() {
-		errorMessage = "";
-		
-		if (!usernameValue.trim() || !emailValue.trim() || !passwordValue.trim() || !confirmPasswordValue.trim()) {
-			errorMessage = "Fill everything";
+		errorMessage = '';
+
+		if (
+			!usernameValue.trim() ||
+			!emailValue.trim() ||
+			!passwordValue.trim() ||
+			!confirmPasswordValue.trim()
+		) {
+			errorMessage = 'Fill everything';
 			return false;
 		}
 
 		if (passwordValue !== confirmPasswordValue) {
-			errorMessage = "Passwords do not match";
+			errorMessage = 'Passwords do not match';
 			return false;
 		}
-		
-		return true; 
+
+		return true;
 	}
 
 	async function sendData() {
@@ -45,37 +72,60 @@
 		}
 
 		isLoading = true;
-		errorMessage = "";
+		errorMessage = '';
 
 		try {
 			const formData = new FormData();
-			formData.append('username', usernameValue.trim())
-			formData.append('email', emailValue.trim())
-			formData.append('password', passwordValue)
-			formData.append('password_confirmation', confirmPasswordValue)
+			formData.append('username', usernameValue.trim());
+			formData.append('email', emailValue.trim());
+			formData.append('password', passwordValue);
+			formData.append('password_confirmation', confirmPasswordValue);
 			if (avatar) {
-				formData.append('avatar', avatar)
-			} 
-			const response = await api.postForm('/register', formData)
+				formData.append('avatar', avatar);
+			}
+			const response = await api.postForm('/register', formData);
 
-			console.log(response)
+			console.log(response);
 
-			if (response.status === 200){ 
-				usernameValue = "";
-				emailValue = "";
-				passwordValue = "";
-				confirmPasswordValue = "";
-				avatar = null;
-				console.log("Registration Successful:", response.data);
-				await goto('/login')
+			if (response.status === 200) {
+				usernameValue = '';
+				emailValue = '';
+				passwordValue = '';
+				confirmPasswordValue = '';
+				avatar = '';
+				console.log('Registration Successful:', response.data);
+				await goto('/login');
 			}
 		} catch (error) {
-			console.error("Registration error:", error);
+			console.error('Registration error:', error);
 		} finally {
 			isLoading = false;
 		}
 	}
 </script>
+
+<div class="mb-[46px] mt-[46px] flex">
+	<div>
+		<img
+			id="Change"
+			class="h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-full border-none shadow-lg transition-opacity hover:opacity-80"
+			src={avatar}
+			onclick={() => fileinput.click()}
+			alt="Default avatar - click to change"
+		/>
+		<input
+			style="display:none"
+			type="file"
+			accept=".jpg, .jpeg, .png"
+			onchange={choosePfp}
+			bind:this={fileinput}
+		/>
+	</div>
+	<button class="p-5" onclick={() => fileinput.click()}>Upload new</button>
+	<button class="p-5" onclick={removePfp}>Remove</button>
+</div>
+
+
 <div class="relative">
 	<input
 		bind:value={usernameValue}
@@ -118,10 +168,10 @@
 	{/if}
 	<button
 		type="button"
-		on:click={togglePassword}
+		onclick={togglePassword}
 		class="absolute right-3 top-1/2 -translate-y-1/2 transform"
 		disabled={isLoading}
-		aria-label={passwordVisible ? "Hide password" : "Show password"}
+		aria-label={passwordVisible ? 'Hide password' : 'Show password'}
 	>
 		<svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path
@@ -142,7 +192,6 @@
 	</button>
 </div>
 
-
 <div class="relative">
 	<input
 		bind:value={confirmPasswordValue}
@@ -157,10 +206,10 @@
 	{/if}
 	<button
 		type="button"
-		on:click={toggleConfirmPassword}
+		onclick={toggleConfirmPassword}
 		class="absolute right-3 top-1/2 -translate-y-1/2 transform"
 		disabled={isLoading}
-		aria-label={confirmPasswordVisible ? "Hide password" : "Show password"}
+		aria-label={confirmPasswordVisible ? 'Hide password' : 'Show password'}
 	>
 		<svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path
@@ -178,21 +227,20 @@
 				stroke-linejoin="round"
 			/>
 		</svg>
-	</button> 
+	</button>
 </div>
 
 {#if errorMessage}
-	<div class="text-red-500 text-sm">
+	<div class="text-sm text-red-500">
 		{errorMessage}
 	</div>
 {/if}
 
-
 <button
 	type="button"
-	on:click={sendData}
+	onclick={sendData}
 	disabled={isLoading}
-	class="mt-4 h-[42px] w-[554px] rounded-lg bg-[#ff4000] text-white font-medium hover:bg-[#ff571f] disabled:bg-gray-400 disabled:cursor-not-allowed"
+	class="mt-4 h-[42px] w-[554px] rounded-lg bg-[#ff4000] font-medium text-white hover:bg-[#ff571f] disabled:cursor-not-allowed disabled:bg-gray-400"
 >
 	{isLoading ? 'Registering...' : 'Register'}
 </button>

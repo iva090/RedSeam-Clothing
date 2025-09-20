@@ -13,9 +13,7 @@
             <div class="flex flex-col gap-4 mt-15">
                 <LogInputs />
             </div>
-            <div class="flex justify-center rounded-lg bg-[#ff4000] mt-[46px] h-[41px]">
-                <button class="text-white">Log In</button>
-            </div>
+
             <div class="mt-6 flex justify-center">
                 <p>Not a member? <a href="/register" class="text-[#ff4000] font-[600]">Register</a></p>
             </div>
