@@ -2,6 +2,8 @@
     import { AppBar, Avatar } from '@skeletonlabs/skeleton-svelte';
     import logo from "../assets/logo.png"
     import user from "../assets/user.png"
+
+    
 </script>
 
 <AppBar background="bg-[#f8f6f7]" base="h-[80px]">

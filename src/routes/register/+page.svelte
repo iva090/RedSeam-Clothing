@@ -1,6 +1,6 @@
 <script>
     import regImg from "$lib/assets/reg-img.png"
-    import ChooseAvatar from "$lib/components/chooseAvatar.svelte";
+
 	import RegInputs from "$lib/components/RegInputs.svelte";
 	let username = $state("");
 	let email = $state("");
@@ -19,11 +19,6 @@
     <div class="flex px-13 py-12 mx-auto">
         <div class="p-20">
             <h1 class="text-4xl items-center justify-center font-bold">Registration</h1>
-            <div>
-                <div class="flex">
-                    <ChooseAvatar />
-                </div>
-            </div>
             <div class="flex flex-col gap-4">
                 <RegInputs />
             </div>

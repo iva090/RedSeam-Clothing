@@ -1,8 +1,9 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/axios/axios';
-	import Avatar from '../assets/regUser.png';
+	import Avatar from '$lib/assets/regUser.png';
 
+	let avatarPreview = $state(Avatar)
 
 	let fileinput = $state();
 	let {
@@ -10,7 +11,7 @@
 		emailValue = $bindable(''),
 		passwordValue = $bindable(''),
 		confirmPasswordValue = $bindable(''),
-		avatar = $bindable(Avatar)
+		avatarFile = $bindable(null)
 	} = $props();
 
 	let passwordVisible = $state(false);
@@ -29,10 +30,13 @@
 	function choosePfp(e) {
 		let image = e.target.files[0];
 		if (!image) return;
+
+		avatarFile = image;
+
 		let reader = new FileReader();
 		reader.readAsDataURL(image);
 		reader.onload = (e) => {
-			avatar = e.target.result;
+			avatarPreview = e.target.result;
 		};
 		if (image == Avatar) return;
 		reader.onerror = (e) => {
@@ -42,12 +46,18 @@
 	}
 
 	function removePfp() {
-		avatar = Avatar;
+		avatarFile = null;
+		avatarPreview = Avatar
 	}
 
 	function validateForm() {
 		errorMessage = '';
 
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(emailValue)) {
+			errorMessage = "Please enter a valid email address";
+			return false;
+		}
 		if (
 			!usernameValue.trim() ||
 			!emailValue.trim() ||
@@ -80,24 +90,31 @@
 			formData.append('email', emailValue.trim());
 			formData.append('password', passwordValue);
 			formData.append('password_confirmation', confirmPasswordValue);
-			if (avatar) {
-				formData.append('avatar', avatar);
+			if (avatarFile) {
+				formData.append('avatar', avatarFile);
 			}
 			const response = await api.postForm('/register', formData);
-
-			console.log(response);
 
 			if (response.status === 200) {
 				usernameValue = '';
 				emailValue = '';
 				passwordValue = '';
 				confirmPasswordValue = '';
-				avatar = '';
+				avatarFile = null;
+				avatarPreview = Avatar;
+
 				console.log('Registration Successful:', response.data);
 				await goto('/login');
 			}
 		} catch (error) {
 			console.error('Registration error:', error);
+
+			if (error.response) {
+				const status = error.response.status;
+				if (status === 422) {
+					errorMessage = "The email you are trying to enter is already registered"
+				}
+			}
 		} finally {
 			isLoading = false;
 		}
@@ -109,7 +126,7 @@
 		<img
 			id="Change"
 			class="h-[150px] w-[150px] cursor-pointer overflow-hidden rounded-full border-none shadow-lg transition-opacity hover:opacity-80"
-			src={avatar}
+			src={avatarPreview}
 			onclick={() => fileinput.click()}
 			alt="Default avatar - click to change"
 		/>
@@ -132,6 +149,7 @@
 		class="border-1 h-[42px] w-[554px] rounded-md border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
 		type="text"
+		minlength="3"
 		placeholder="Username"
 		disabled={isLoading}
 	/>
@@ -159,6 +177,7 @@
 		bind:value={passwordValue}
 		class="border-1 h-[42px] w-[554px] rounded-md border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
+		minlength="3"
 		type={passwordVisible ? 'text' : 'password'}
 		placeholder="Password"
 		disabled={isLoading}
