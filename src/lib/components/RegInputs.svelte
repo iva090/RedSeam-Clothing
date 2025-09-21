@@ -101,8 +101,7 @@
 				passwordValue = '';
 				confirmPasswordValue = '';
 				avatarFile = null;
-				avatarPreview = Avatar;
-
+				avatarPreview = Avatar
 				console.log('Registration Successful:', response.data);
 				await goto('/login');
 			}

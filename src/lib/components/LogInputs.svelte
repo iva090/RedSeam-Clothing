@@ -1,6 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/axios/axios.js';
+	import { isLoggedIn } from '$lib/auth.js';
 
 	let passwordVisible = false;
 	let emailValue = '';
@@ -37,18 +38,17 @@
             };
 
             const response = await api.postForm('/login', loginData);
+			console.log(response)
 
             if (response.status === 200) {
                 console.log("Login Successful:", response.data);
                 
-                if (response.data.token) {
-                    localStorage.setItem('authToken', response.data.token);
-                }
-                
                 emailValue = '';
                 passwordValue = '';
-                
+                isLoggedIn.set(true)
+
                 await goto("..")
+
             }
         } catch (error) {
             console.error("Login error:", error);
@@ -58,11 +58,6 @@
         }
     }
 
-    function handleKeydown(event) {
-        if (event.key === 'Enter' && !isLoading) {
-            handleLogin();
-        }
-    }
 </script>
 
 <div class="relative">
