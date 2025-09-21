@@ -1,7 +1,8 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/axios/axios.js';
-	import { isLoggedIn } from '$lib/auth.js';
+	import { isLoggedIn, userAvatar } from '$lib/auth.js';
+	import { browser } from '$app/environment';
 
 	let passwordVisible = false;
 	let emailValue = '';
@@ -42,13 +43,20 @@
 
             if (response.status === 200) {
                 console.log("Login Successful:", response.data);
-                
+				if (browser) {
+					const userData = {
+						token: response.data.token,
+						avatar: response.data.user.avatar
+					};
+					localStorage.setItem('userData', JSON.stringify(userData));
+				}
+				userAvatar.set(response.data.user.avatar)
+
                 emailValue = '';
                 passwordValue = '';
                 isLoggedIn.set(true)
 
                 await goto("..")
-
             }
         } catch (error) {
             console.error("Login error:", error);
