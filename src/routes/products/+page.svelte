@@ -1,16 +1,19 @@
 <script>
     import { onMount } from 'svelte';
     import { api } from '$lib/axios/axios.js';
+	import { goto } from '$app/navigation';
 
     let products = [];
     let errorMessage = '';
     let isLoading = true;
     let filterOpen = false;
+    let sortOpen = false;
     let minPrice = '';
     let maxPrice = '';
     let currentPage = 1;
     let lastPage = 1;
     let totalProducts = 0;
+    let sortOption = null;
 
     async function getProducts(page = 1) {
         isLoading = true;
@@ -18,10 +21,13 @@
         try {
             const params = { page };
             if (minPrice) {
-                params.minPrice = minPrice;
+                params['filter[price_from]'] = minPrice;
             }
             if (maxPrice) {
-                params.maxPrice = maxPrice;
+                params['filter[price_to]'] = maxPrice;
+            }
+            if (sortOption) {
+                params.sort = sortOption;
             }
             const response = await api.get('/products', { params });
             if (response.status === 200) {
@@ -44,6 +50,16 @@
 
     function toggleFilter() {
         filterOpen = !filterOpen;
+        if (filterOpen) {
+            sortOpen = false;
+        }
+    }
+
+    function toggleSort() {
+        sortOpen = !sortOpen;
+        if (sortOpen) {
+            filterOpen = false;
+        }
     }
 
     function handleApply() {
@@ -56,6 +72,12 @@
             currentPage = page;
             getProducts(currentPage);
         }
+    }
+
+    function handleSort(option) {
+        sortOption = option;
+        sortOpen = false;
+        getProducts(1);
     }
 
     function getPaginationRange() {
@@ -77,6 +99,7 @@
         if (right < lastPage - 1) {
             range.push('...');
         }
+
         if (lastPage > 1 && !range.includes(lastPage)) {
             range.push(lastPage);
         }
@@ -85,7 +108,7 @@
     }
 </script>
 
-<svelte:window on:click={() => (filterOpen = false)} />
+<svelte:window on:click={() => { filterOpen = false; sortOpen = false; }} />
 
 <div class="ml-25 mr-25">
     <div class="mb-8 flex items-center justify-between">
@@ -134,7 +157,7 @@
                 </div>
             {/if}
             <div class="h-6 border-r border-gray-300"></div>
-            <button class="flex items-center gap-1">
+            <button on:click|stopPropagation={toggleSort} class="flex items-center gap-1">
                 Sort by
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -147,6 +170,18 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
             </button>
+            {#if sortOpen}
+                <div on:click|stopPropagation class="absolute top-full right-0 mt-2 z-50 bg-white p-2 rounded-lg shadow-xl w-48">
+                    <ul class="space-y-1">
+                        <li>
+                            <button on:click={() => handleSort('price')} class="w-full text-left p-2 hover:bg-gray-100 rounded-md">Price: Low to High</button>
+                        </li>
+                        <li>
+                            <button on:click={() => handleSort('-price')} class="w-full text-left p-2 hover:bg-gray-100 rounded-md">Price: High to Low</button>
+                        </li>
+                    </ul>
+                </div>
+            {/if}
         </div>
     </div>
 
@@ -161,11 +196,11 @@
     {:else if products.length > 0}
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {#each products as product}
-                <div class="flex flex-col items-start text-left">
+                <div class="flex flex-col items-start text-left ">
                     <img
                         src={product.cover_image}
                         alt={product.name}
-                        class="mb-2 h-auto w-full rounded-md object-cover shadow-sm"
+                        class="mb-2 h-auto w-full rounded-md object-cover shadow-md"
                     />
                     <p class="text-sm font-medium capitalize text-[#10151f]">{product.name}</p>
                     <p class="text-sm text-[#10151f]">${product.price}</p>
@@ -173,17 +208,18 @@
             {/each}
         </div>
         
-        <div class="flex items-center justify-center mt-15 space-x-2 mb-20">
+        <div class="flex items-center justify-center mt-15 mb-20 space-x-2">
             <button
                 on:click={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
                 class="flex items-center justify-center w-10 h-10 border-none text-gray-500"
             >
-            &lt
+            &lt;
             </button>
 
             {#each getPaginationRange() as page}
                 {#if page === '...'}
-                    <span class="w-10 h-10 flex items-center border-2 border-gray-200 rounded-md justify-center text-gray-900">...</span>
+                    <span class="w-10 h-10 flex items-center border-2 rounded-md border-gray-200 justify-center text-gray-900">...</span>
                 {:else}
                     <button
                         on:click={() => goToPage(page)}
@@ -199,6 +235,7 @@
 
             <button
                 on:click={() => goToPage(currentPage + 1)}
+                disabled={currentPage === lastPage}
                 class="flex items-center justify-center w-10 h-10 border-none text-gray-900"
             >
             &gt;
