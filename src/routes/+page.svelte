@@ -1,9 +1,10 @@
 <script>
-    import {api} from "$lib/axios/axios.js"
-    async function getData() {
-        const response = await api.get("/products")
-        console.log(response)
-    }
+	import { onMount } from "svelte";
+    import Products from "./products/+page.svelte"
+	import { goto } from "$app/navigation";
+    onMount(() => {
+        goto('/products')
+    });
 </script>
 
 <main>

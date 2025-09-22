@@ -1,5 +1,6 @@
 import { browser } from '$app/environment';
 import { writable } from 'svelte/store'
+import {api} from '$lib/axios/axios.js'
 
 let initialIsLoggedIn = false;
 let initialUserAvatar = null;
