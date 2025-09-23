@@ -5,6 +5,7 @@
     import { goto } from '$app/navigation';
     import ProductCard from '$lib/components/ProductCard.svelte';
     import Pagination from '$lib/components/Pagination.svelte';
+    import { page } from '$app/stores'; // Import SvelteKit's page store
 
     let products = [];
     let errorMessage = '';
@@ -17,6 +18,15 @@
     let lastPage = 1;
     let totalProducts = 0;
     let sortOption = null;
+
+    $: {
+        const urlParams = new URLSearchParams($page.url.search);
+        currentPage = parseInt(urlParams.get('page')) || 1;
+        sortOption = urlParams.get('sort') || null;
+        minPrice = urlParams.get('filter[price_from]') || '';
+        maxPrice = urlParams.get('filter[price_to]') || '';
+        getProducts(currentPage);
+    }
 
     async function getProducts(page = 1) {
         isLoading = true;
@@ -45,9 +55,26 @@
         }
     }
 
-    onMount(() => {
-        getProducts(currentPage);
-    });
+    function updateUrl(newPage = currentPage, newSort = sortOption, newMinPrice = minPrice, newMaxPrice = maxPrice) {
+        const url = new URL($page.url);
+        url.searchParams.set('page', newPage);
+        if (newSort) {
+            url.searchParams.set('sort', newSort);
+        } else {
+            url.searchParams.delete('sort');
+        }
+        if (newMinPrice) {
+            url.searchParams.set('filter[price_from]', newMinPrice);
+        } else {
+            url.searchParams.delete('filter[price_from]');
+        }
+        if (newMaxPrice) {
+            url.searchParams.set('filter[price_to]', newMaxPrice);
+        } else {
+            url.searchParams.delete('filter[price_to]');
+        }
+        goto(url.toString(), { replaceState: true });
+    }
 
     function toggleFilter() {
         filterOpen = !filterOpen;
@@ -64,21 +91,20 @@
     }
 
     function handleApply() {
-        getProducts(1);
+        updateUrl(1, sortOption, minPrice, maxPrice);
         filterOpen = false;
     }
 
     function goToPage(page) {
         if (page >= 1 && page <= lastPage) {
-            currentPage = page;
-            getProducts(currentPage);
+            updateUrl(page, sortOption, minPrice, maxPrice);
         }
     }
 
     function handleSort(option) {
         sortOption = option;
         sortOpen = false;
-        getProducts(1);
+        updateUrl(1, sortOption, minPrice, maxPrice);
     }
 
     function viewProductDetails(productId) {
