@@ -33,7 +33,7 @@
 <AppBar background="bg-[#f8f6f7]" base="h-[80px] mt-3">
     {#snippet lead()}
         <div class="ml-20 flex items-center gap-2">
-            <a href="/products">
+            <a href="/listing">
                 <img src={logo} alt="logo" class="h-6" />
             </a>
             <p class="text-l font-semibold text-black">RedSeam Clothing</p>
@@ -49,7 +49,7 @@
                 
                 <div class="relative inline-block text-left">
                     <div class="flex items-center">
-                        <img on:click={() => goto('/products')} class="h-6 w-6 rounded-full object-cover cursor-pointer" src={$userAvatar ? $userAvatar : user} alt="userAvatar">
+                        <img on:click={() => goto('/listing')} class="h-6 w-6 rounded-full object-cover cursor-pointer" src={$userAvatar ? $userAvatar : user} alt="userAvatar">
                         <button 
                             type="button" 
                             on:click|stopPropagation={toggleDropdown} 

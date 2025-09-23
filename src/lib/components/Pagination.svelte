@@ -1,33 +1,25 @@
 <script>
-    //@ts-check
     export let currentPage;
     export let lastPage;
     export let goToPage;
 
     function getPaginationRange() {
         const range = [];
-
         range.push(1);
-
         let left = Math.max(2, currentPage - 1);
         let right = Math.min(lastPage - 1, currentPage + 1);
-
         if (left > 2) {
             range.push('...');
         }
-        
         for (let i = left; i <= right; i++) {
             range.push(i);
         }
-
         if (right < lastPage - 1) {
             range.push('...');
         }
-
         if (lastPage > 1 && !range.includes(lastPage)) {
             range.push(lastPage);
         }
-
         return range;
     }
 </script>
@@ -40,7 +32,6 @@
     >
         &lt;
     </button>
-
     {#each getPaginationRange() as page}
         {#if page === '...'}
             <span class="w-10 h-10 flex items-center border-2 rounded-md border-gray-200 justify-center text-gray-900">...</span>
@@ -56,7 +47,6 @@
             </button>
         {/if}
     {/each}
-
     <button
         on:click={() => goToPage(currentPage + 1)}
         disabled={currentPage === lastPage}

@@ -1,6 +1,8 @@
 <script>
+    //@ts-nocheck
     import { onMount } from 'svelte';
     import { api } from '$lib/axios/axios.js';
+    import { goto } from '$app/navigation';
     import ProductCard from '$lib/components/ProductCard.svelte';
     import Pagination from '$lib/components/Pagination.svelte';
 
@@ -35,10 +37,8 @@
                 products = response.data.data;
                 lastPage = response.data.meta.last_page;
                 totalProducts = response.data.meta.total;
-                console.log('Products fetched successfully:', products);
             }
         } catch (error) {
-            console.error('Error fetching products:', error);
             errorMessage = 'Failed to load products. Please try again later.';
         } finally {
             isLoading = false;
@@ -64,7 +64,7 @@
     }
 
     function handleApply() {
-        getProducts(currentPage);
+        getProducts(1);
         filterOpen = false;
     }
 
@@ -79,6 +79,10 @@
         sortOption = option;
         sortOpen = false;
         getProducts(1);
+    }
+
+    function viewProductDetails(productId) {
+        goto(`/listing/${productId}`);
     }
 </script>
 
@@ -125,7 +129,7 @@
                             placeholder="To"
                         />
                     </div>
-                    <button on:click={handleApply} class="w-1/3 py-2 bg-[#ff4000] text-white font-semibold rounded-lg">
+                    <button on:click={handleApply} class="w-full py-2 bg-[#ff4000] text-white font-semibold rounded-lg">
                         Apply
                     </button>
                 </div>
@@ -159,7 +163,14 @@
         </div>
     </div>
 
-    {#if isLoading}
+    {#if products.length > 0}
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {#each products as product (product.id)}
+                <ProductCard {product} onviewDetails={() => viewProductDetails(product.id)} />
+            {/each}
+        </div>
+        <Pagination {currentPage} {lastPage} {goToPage} />
+    {:else if isLoading}
         <div class="py-10 text-center">
             <p class="text-gray-500">Loading products...</p>
         </div>
@@ -167,14 +178,6 @@
         <div class="py-10 text-center">
             <p class="text-red-500">{errorMessage}</p>
         </div>
-    {:else if products.length > 0}
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {#each products as product}
-                <ProductCard {product} />
-            {/each}
-        </div>
-        
-        <Pagination {currentPage} {lastPage} {goToPage} />
     {:else}
         <div class="py-10 text-center">
             <p class="text-gray-500">No products found.</p>
