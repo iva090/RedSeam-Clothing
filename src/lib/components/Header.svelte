@@ -5,7 +5,6 @@
     import {isLoggedIn, userAvatar } from '$lib/auth';
     import { goto } from '$app/navigation';
 
-
     let dropdownOpen = false;
 
     function toggleDropdown() {

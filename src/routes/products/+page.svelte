@@ -1,7 +1,8 @@
 <script>
     import { onMount } from 'svelte';
     import { api } from '$lib/axios/axios.js';
-	import { goto } from '$app/navigation';
+    import ProductCard from '$lib/components/ProductCard.svelte';
+    import Pagination from '$lib/components/Pagination.svelte';
 
     let products = [];
     let errorMessage = '';
@@ -79,33 +80,6 @@
         sortOpen = false;
         getProducts(1);
     }
-
-    function getPaginationRange() {
-        const range = [];
-
-        range.push(1);
-
-        let left = Math.max(2, currentPage - 2);
-        let right = Math.min(lastPage - 1, currentPage + 2);
-
-        if (left > 2) {
-            range.push('...');
-        }
-        
-        for (let i = left; i <= right; i++) {
-            range.push(i);
-        }
-
-        if (right < lastPage - 1) {
-            range.push('...');
-        }
-
-        if (lastPage > 1 && !range.includes(lastPage)) {
-            range.push(lastPage);
-        }
-
-        return range;
-    }
 </script>
 
 <svelte:window on:click={() => { filterOpen = false; sortOpen = false; }} />
@@ -151,7 +125,7 @@
                             placeholder="To"
                         />
                     </div>
-                    <button on:click={handleApply} class="w-full py-2 bg-[#ff4000] text-white font-semibold rounded-lg">
+                    <button on:click={handleApply} class="w-1/3 py-2 bg-[#ff4000] text-white font-semibold rounded-lg">
                         Apply
                     </button>
                 </div>
@@ -196,51 +170,11 @@
     {:else if products.length > 0}
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {#each products as product}
-                <div class="flex flex-col items-start text-left ">
-                    <img
-                        src={product.cover_image}
-                        alt={product.name}
-                        class="mb-2 h-auto w-full rounded-md object-cover shadow-md"
-                    />
-                    <p class="text-sm font-medium capitalize text-[#10151f]">{product.name}</p>
-                    <p class="text-sm text-[#10151f]">${product.price}</p>
-                </div>
+                <ProductCard {product} />
             {/each}
         </div>
         
-        <div class="flex items-center justify-center mt-15 mb-20 space-x-2">
-            <button
-                on:click={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                class="flex items-center justify-center w-10 h-10 border-none text-gray-500"
-            >
-            &lt;
-            </button>
-
-            {#each getPaginationRange() as page}
-                {#if page === '...'}
-                    <span class="w-10 h-10 flex items-center border-2 rounded-md border-gray-200 justify-center text-gray-900">...</span>
-                {:else}
-                    <button
-                        on:click={() => goToPage(page)}
-                        class="flex items-center justify-center w-10 h-10 rounded-md border-2 border-{currentPage === page ? "[#ff4000]" : "gray-200"} text-sm font-medium"
-                        class:bg-[white]={currentPage === page}
-                        class:text-[#ff4000]={currentPage === page}
-                        class:text-gray-700={currentPage !== page}
-                    >
-                        {page}
-                    </button>
-                {/if}
-            {/each}
-
-            <button
-                on:click={() => goToPage(currentPage + 1)}
-                disabled={currentPage === lastPage}
-                class="flex items-center justify-center w-10 h-10 border-none text-gray-900"
-            >
-            &gt;
-            </button>
-        </div>
+        <Pagination {currentPage} {lastPage} {goToPage} />
     {:else}
         <div class="py-10 text-center">
             <p class="text-gray-500">No products found.</p>
