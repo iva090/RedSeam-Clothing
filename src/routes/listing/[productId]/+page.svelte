@@ -8,7 +8,7 @@
     import SizeSelector from '$lib/components/SizeSelector.svelte';
     import AddToCart from '$lib/components/AddToCart.svelte';
 
-    let selectedProduct = page.params.productId;
+    let product = page.params.productId;
     let productData = null;
     let isLoading = true;
     let errorMessage = '';
@@ -23,7 +23,7 @@
         isLoading = true;
         errorMessage = '';
         try {
-            const response = await api.get(`/products/${selectedProduct}`);
+            const response = await api.get(`/products/${product}`);
             if (response.status === 200) {
                 productData = response.data;
                 console.log(productData);
@@ -68,15 +68,15 @@
             	size: selectedSize
 			})
 			if (response.status === 200) {
+				alert('Product added to cart!');
 				console.log(response)
-				
 			}
 		} catch (error){
 			console.error(error)
 		}
         await new Promise(resolve => setTimeout(resolve, 1000));
         isAddingToCart = false;
-        alert('Product added to cart!');
+        
     }
 
     onMount(() => {

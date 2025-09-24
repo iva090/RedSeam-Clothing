@@ -1,6 +1,7 @@
 <script>
     export let isLoading = false;
     export let onAddToCart = () => {};
+
 </script>
 
 <div class="mt-13">
