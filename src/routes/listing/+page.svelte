@@ -5,7 +5,7 @@
     import { goto } from '$app/navigation';
     import ProductCard from '$lib/components/ProductCard.svelte';
     import Pagination from '$lib/components/Pagination.svelte';
-    import { page } from '$app/stores'; // Import SvelteKit's page store
+    import { page } from '$app/stores';
 
     let products = [];
     let errorMessage = '';
