@@ -20,22 +20,26 @@
 		}
 	}
 
-	async function updateQuantity(item, newQuantity){
-		if (newQuantity < 1) return
-		item.quantity = newQuantity
-		cartItems = cartItems
-		try{
-			await api.patch(`/cart/products/${item.id}`, { quantity: newQuantity });
-		} catch(error) {
-			console.error(error)
-			getCartItems()
+	async function updateQuantity(item, newQuantity) {
+		if (newQuantity < 1) return;
+		item.quantity = newQuantity;
+		cartItems = cartItems;
+		try {
+			await api.patch(`/cart/products/${item.id}`, {
+				quantity: newQuantity,
+				color: item.color,
+				size: item.size
+			});
+		} catch (error) {
+			console.error(error);
+			getCartItems();
 		}
 	}
 
 	async function decreaseQuantity(item) {
 		try {
 			if (item.quantity > 1) {
-				updateQuantity(item, item.quantity - 1)
+				updateQuantity(item, item.quantity - 1);
 			}
 		} catch (error) {
 			console.error('Failed to decrease item quantity:', error);
@@ -44,9 +48,26 @@
 
 	async function increaseQuantity(item) {
 		try {
-			updateQuantity(item, item.quantity + 1)
+			updateQuantity(item, item.quantity + 1);
 		} catch (error) {
 			console.error('Failed to decrease item quantity:', error);
+		}
+	}
+
+	async function deleteItem(item) {
+		try {
+			await api.delete(`/cart/products/${item.id}`, {
+				data: {
+					color: item.color,
+					size: item.size
+				}
+			});
+			cartItems = cartItems.filter(
+				(cartItem) =>
+					!(cartItem.id === item.id && cartItem.color === item.color && cartItem.size === item.size)
+			);
+		} catch (error) {
+			console.error(error);
 		}
 	}
 
@@ -121,9 +142,16 @@
 												disabled={item.quantity === 1}>-</button
 											>
 											<span class="text-sm">{item.quantity}</span>
-											<button onclick={() => increaseQuantity(item)} class="text-lg text-gray-600">+</button>
+											<button onclick={() => increaseQuantity(item)} class="text-lg text-gray-600"
+												>+</button
+											>
 										</div>
-										<button class="mt-2 font-semibold text-gray-500"> Remove </button>
+										<button
+											class="mt-2 font-semibold text-gray-500"
+											onclick={() => deleteItem(item)}
+										>
+											Remove
+										</button>
 									</div>
 								</div>
 							</div>
