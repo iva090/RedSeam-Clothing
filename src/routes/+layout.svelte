@@ -17,7 +17,7 @@
 <style>
 	:global(body){
 		font-family: 'Poppins', sans-serif;
-		background-color: #f8f6f7;
+		background-color:white;
 		color:black;
 	}
 </style>

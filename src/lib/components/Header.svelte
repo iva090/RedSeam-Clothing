@@ -36,7 +36,7 @@
 
 <svelte:window on:click={closeDropdown} />
 
-<AppBar background="bg-[#f8f6f7]" base="h-[80px] mt-3">
+<AppBar background="bg-white" base="h-[80px] mt-3">
 	{#snippet lead()}
 		<div class="ml-20 flex items-center gap-2">
 			<a href="/listing">

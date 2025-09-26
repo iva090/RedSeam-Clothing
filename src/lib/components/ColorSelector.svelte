@@ -10,7 +10,7 @@
         yellow: 'yellow',
         purple: 'purple',
         black: 'black',
-        white: 'white',
+        white: '#f5f5f5',
         'navy blue': 'blue',
         beige: '#EED9C4',
         brown: 'brown',
