@@ -19,7 +19,7 @@
     let selectedQuantity = 1;
     let dropdownOpen = false;
     let isAddingToCart = false;
-    let cartMessage = ''; // Renamed from cardMessage for clarity
+    let cartMessage = ''; 
 
     async function getProductDetails() {
         isLoading = true;
@@ -82,10 +82,10 @@
             const response = await api.post(`/cart/products/${product}`, request);
             if (response.status === 200) {
                 console.log(response);
-                cartMessage = "This item has been added"; // Updated variable name
+                cartMessage = "This item has been added"; 
                 setTimeout(() => {
                     window.location.reload();
-                }, 1000); // Corrected setTimeout syntax
+                }, 1000); 
             }
         } catch (error) {
             console.error(error);
@@ -94,7 +94,7 @@
     }
 
     onMount(() => {
-        getProductDetails(); // Corrected: Added parentheses to execute the function
+        getProductDetails();
     });
 </script>
 
