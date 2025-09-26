@@ -39,6 +39,7 @@
 	},
 	"dependencies": {
 		"@fontsource/poppins": "^5.2.7",
-		"axios": "^1.12.2"
+		"axios": "^1.12.2",
+		"tailwind-scrollbar": "^4.0.2"
 	}
 }

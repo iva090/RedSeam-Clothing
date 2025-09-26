@@ -7,8 +7,9 @@
     import ColorSelector from '$lib/components/ColorSelector.svelte';
     import SizeSelector from '$lib/components/SizeSelector.svelte';
     import AddToCart from '$lib/components/AddToCart.svelte';
+    import { isLoggedIn } from '$lib/auth';
 
-    let product = page.params.productId;
+    let product = parseInt(page.params.productId);
     let productData = null;
     let isLoading = true;
     let errorMessage = '';
@@ -18,35 +19,40 @@
     let selectedQuantity = 1;
     let dropdownOpen = false;
     let isAddingToCart = false;
+    let cartMessage = ''; // Renamed from cardMessage for clarity
 
     async function getProductDetails() {
         isLoading = true;
         errorMessage = '';
-        try {
-            const response = await api.get(`/products/${product}`);
-            if (response.status === 200) {
-                productData = response.data;
-                console.log(productData);
+        if (isLoggedIn) {
+            try {
+                const response = await api.get(`/products/${product}`);
+                if (response.status === 200) {
+                    productData = response.data;
+                    console.log(productData);
 
-                if (productData.images && productData.available_colors) {
-                    variants = productData.available_colors.map((color, index) => ({
-                        color: color,
-                        image: productData.images[index]
-                    }));
-                }
+                    if (productData.images && productData.available_colors) {
+                        variants = productData.available_colors.map((color, index) => ({
+                            color: color,
+                            image: productData.images[index]
+                        }));
+                    }
 
-                if (variants.length > 0) {
-                    selectedVariant = variants[0];
-                }
+                    if (variants.length > 0) {
+                        selectedVariant = variants[0];
+                    }
 
-                if (productData.available_sizes && productData.available_sizes.length > 0) {
-                    selectedSize = productData.available_sizes[0];
+                    if (productData.available_sizes && productData.available_sizes.length > 0) {
+                        selectedSize = productData.available_sizes[0];
+                    }
                 }
+            } catch (error) {
+                errorMessage = 'Failed to load product details. Please try again.';
+            } finally {
+                isLoading = false;
             }
-        } catch (error) {
-            errorMessage = 'Failed to load product details. Please try again.';
-        } finally {
-            isLoading = false;
+        } else {
+            alert('Please log in first');
         }
     }
 
@@ -60,27 +66,35 @@
     }
 
     async function handleAddToCart() {
+        if (!isLoggedIn) {
+            alert('Please log in to add items to your cart.');
+            return;
+        }
+
         isAddingToCart = true;
-		try{
-			const response = await api.post(`/cart/products/${selectedProduct}`, {
-            	variant: selectedVariant.color.toLowerCase(),
-            	quantity: selectedQuantity,
-            	size: selectedSize
-			})
-			if (response.status === 200) {
-				alert('Product added to cart!');
-				console.log(response)
-			}
-		} catch (error){
-			console.error(error)
-		}
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+            const request = {
+                quantity: parseInt(selectedQuantity),
+                color: selectedVariant.color.toLowerCase(),
+                size: selectedSize
+            };
+            console.log(request);
+            const response = await api.post(`/cart/products/${product}`, request);
+            if (response.status === 200) {
+                console.log(response);
+                cartMessage = "This item has been added"; // Updated variable name
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000); // Corrected setTimeout syntax
+            }
+        } catch (error) {
+            console.error(error);
+        }
         isAddingToCart = false;
-        
     }
 
     onMount(() => {
-        getProductDetails();
+        getProductDetails(); // Corrected: Added parentheses to execute the function
     });
 </script>
 
@@ -109,9 +123,16 @@
                 <h1 class="mb-2 text-4xl font-bold capitalize text-[#10151f]">{productData.name}</h1>
                 <p class="mb-4 text-2xl font-semibold text-[#10151f]">$ {productData.price}</p>
                 <div class="product-details-container">
-                    <ColorSelector {variants} bind:selectedVariant onSelectColor={(variant) => selectedVariant = variant} />
-                    <SizeSelector availableSizes={productData.available_sizes} bind:selectedSize onSelectSize={(size) => selectedSize = size} />
-
+                    <ColorSelector
+                        {variants}
+                        bind:selectedVariant
+                        onSelectColor={(variant) => (selectedVariant = variant)}
+                    />
+                    <SizeSelector
+                        availableSizes={productData.available_sizes}
+                        bind:selectedSize
+                        onSelectSize={(size) => (selectedSize = size)}
+                    />
                     <div>
                         <h3 class="mb-2 mt-10 text-lg font-medium">Quantity</h3>
                         <div class="relative inline-block text-left">
@@ -140,7 +161,9 @@
                                     class="absolute z-50 mt-2 w-full rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5"
                                 >
                                     <div class="py-1">
-                                        {#each Array(10).fill().map((_, i) => i + 1) as quantity}
+                                        {#each Array(10)
+                                            .fill()
+                                            .map((_, i) => i + 1) as quantity}
                                             <button
                                                 on:click={() => selectQuantity(quantity)}
                                                 class="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -153,7 +176,7 @@
                             {/if}
                         </div>
                     </div>
-                    <AddToCart isLoading={isAddingToCart} onAddToCart={handleAddToCart} />
+                    <AddToCart isLoading={isAddingToCart} onAddToCart={handleAddToCart} bind:message={cartMessage}/>
                 </div>
                 <hr class="mt-13 mb-6 h-2 text-gray-300" />
                 <div class="card">
