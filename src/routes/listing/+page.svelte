@@ -7,6 +7,7 @@
     import Pagination from '$lib/components/Pagination.svelte';
     import { page } from '$app/stores';
 
+    export let getCartItems;
     let products = [];
     let errorMessage = '';
     let isLoading = true;
@@ -110,6 +111,21 @@
     function viewProductDetails(productId) {
         goto(`/listing/${productId}`);
     }
+
+    getCartItems = async () => {
+        try {
+            const response = await api.get('/cart');
+            if (response.status === 200) {
+                cartItems = response.data;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    onMount(() => {
+        getCartItems()
+    })
 </script>
 
 <svelte:window on:click={() => { filterOpen = false; sortOpen = false; }} />

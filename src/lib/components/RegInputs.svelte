@@ -3,7 +3,7 @@
 	import { api } from '$lib/axios/axios';
 	import Avatar from '$lib/assets/regUser.png';
 
-	let avatarPreview = $state(Avatar)
+	let avatarPreview = $state(Avatar);
 
 	let fileinput = $state();
 	let {
@@ -47,7 +47,7 @@
 
 	function removePfp() {
 		avatarFile = null;
-		avatarPreview = Avatar
+		avatarPreview = Avatar;
 	}
 
 	function validateForm() {
@@ -55,7 +55,7 @@
 
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		if (!emailRegex.test(emailValue)) {
-			errorMessage = "Please enter a valid email address";
+			errorMessage = 'Please enter a valid email address';
 			return false;
 		}
 		if (
@@ -101,7 +101,7 @@
 				passwordValue = '';
 				confirmPasswordValue = '';
 				avatarFile = null;
-				avatarPreview = Avatar
+				avatarPreview = Avatar;
 				console.log('Registration Successful:', response.data);
 				await goto('/login');
 			}
@@ -111,7 +111,7 @@
 			if (error.response) {
 				const status = error.response.status;
 				if (status === 422) {
-					errorMessage = "The email you are trying to enter is already registered"
+					errorMessage = 'The email you are trying to enter is already registered';
 				}
 			}
 		} finally {
@@ -120,7 +120,7 @@
 	}
 </script>
 
-<div class="mb-[46px] mt-[46px] flex">
+<div class="mt-[46px] mb-[46px] flex">
 	<div>
 		<img
 			id="Change"
@@ -141,53 +141,43 @@
 	<button class="p-5" onclick={removePfp}>Remove</button>
 </div>
 
-
 <div class="relative">
 	<input
 		bind:value={usernameValue}
-		class="border-1 h-[42px] w-[554px] rounded-md border-[#d4d1cb] p-2 placeholder-[#3e424a]"
+		class="h-[42px] w-[554px] rounded-md border-1 border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
 		type="text"
 		minlength="3"
-		placeholder="Username"
+		placeholder="Username *"
 		disabled={isLoading}
 	/>
-	{#if usernameValue === ''}
-		<span class="absolute left-[95px] top-1/2 -translate-y-1/2 transform text-red-500">*</span>
-	{/if}
 </div>
 
 <div class="relative">
 	<input
 		bind:value={emailValue}
-		class="border-1 h-[42px] w-[554px] rounded-md border-[#d4d1cb] p-2 placeholder-[#3e424a]"
+		class="h-[42px] w-[554px] rounded-md border-1 border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
 		type="email"
-		placeholder="Email"
+		placeholder="Email *"
 		disabled={isLoading}
 	/>
-	{#if emailValue === ''}
-		<span class="absolute left-[55px] top-1/2 -translate-y-1/2 transform text-red-500">*</span>
-	{/if}
 </div>
 
 <div class="relative">
 	<input
 		bind:value={passwordValue}
-		class="border-1 h-[42px] w-[554px] rounded-md border-[#d4d1cb] p-2 placeholder-[#3e424a]"
+		class="h-[42px] w-[554px] rounded-md border-1 border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
 		minlength="3"
 		type={passwordVisible ? 'text' : 'password'}
-		placeholder="Password"
+		placeholder="Password *"
 		disabled={isLoading}
 	/>
-	{#if passwordValue === ''}
-		<span class="absolute left-[90px] top-1/2 -translate-y-1/2 transform text-red-500">*</span>
-	{/if}
 	<button
 		type="button"
 		onclick={togglePassword}
-		class="absolute right-3 top-1/2 -translate-y-1/2 transform"
+		class="absolute top-1/2 right-3 -translate-y-1/2 transform"
 		disabled={isLoading}
 		aria-label={passwordVisible ? 'Hide password' : 'Show password'}
 	>
@@ -213,19 +203,16 @@
 <div class="relative">
 	<input
 		bind:value={confirmPasswordValue}
-		class="border-1 h-[42px] w-[554px] rounded-md border-[#d4d1cb] p-2 placeholder-[#3e424a]"
+		class="h-[42px] w-[554px] rounded-md border-1 border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
 		type={confirmPasswordVisible ? 'text' : 'password'}
-		placeholder="Confirm password"
+		placeholder="Confirm password *"
 		disabled={isLoading}
 	/>
-	{#if confirmPasswordValue === ''}
-		<span class="absolute left-[160px] top-1/2 -translate-y-1/2 transform text-red-500">*</span>
-	{/if}
 	<button
 		type="button"
 		onclick={toggleConfirmPassword}
-		class="absolute right-3 top-1/2 -translate-y-1/2 transform"
+		class="absolute top-1/2 right-3 -translate-y-1/2 transform"
 		disabled={isLoading}
 		aria-label={confirmPasswordVisible ? 'Hide password' : 'Show password'}
 	>

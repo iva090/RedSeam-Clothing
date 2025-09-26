@@ -24,25 +24,25 @@
 		return true;
 	}
 
-    async function handleLogin() {
-        if (!validateForm()) {
-            return;
-        }
+	async function handleLogin() {
+		if (!validateForm()) {
+			return;
+		}
 
-        isLoading = true;
-        errorMessage = '';
+		isLoading = true;
+		errorMessage = '';
 
-        try {
-            const loginData = {
-                email: emailValue.trim(),
-                password: passwordValue
-            };
+		try {
+			const loginData = {
+				email: emailValue.trim(),
+				password: passwordValue
+			};
 
-            const response = await api.postForm('/login', loginData);
-			console.log(response)
+			const response = await api.postForm('/login', loginData);
+			console.log(response);
 
-            if (response.status === 200) {
-                console.log("Login Successful:", response.data);
+			if (response.status === 200) {
+				console.log('Login Successful:', response.data);
 				if (browser) {
 					const userData = {
 						token: response.data.token,
@@ -51,52 +51,45 @@
 					};
 					localStorage.setItem('userData', JSON.stringify(userData));
 				}
-				userAvatar.set(response.data.user.avatar)
+				userAvatar.set(response.data.user.avatar);
 
-                emailValue = '';
-                passwordValue = '';
-                isLoggedIn.set(true)
+				emailValue = '';
+				passwordValue = '';
+				isLoggedIn.set(true);
 
-                await goto("..")
-            }
-        } catch (error) {
-            console.error("Login error:", error);
-            errorMessage = "At least one of the inputs is wrong"
-        } finally {
-            isLoading = false;
-        }
-    }
-
+				await goto('..');
+			}
+		} catch (error) {
+			console.error('Login error:', error);
+			errorMessage = 'At least one of the inputs is wrong';
+		} finally {
+			isLoading = false;
+		}
+	}
 </script>
 
 <div class="relative">
 	<input
 		bind:value={emailValue}
-		class="border-1 h-[42px] w-[554px] rounded-md border-[#d4d1cb] p-2 placeholder-[#3e424a]"
+		class="h-[42px] w-[554px] rounded-md border-1 border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
 		type="email"
-		placeholder="Email"
+		placeholder="Email *"
 	/>
-	{#if emailValue === ''}
-		<span class="absolute left-[55px] top-1/2 -translate-y-1/2 transform text-red-500">*</span>
-	{/if}
 </div>
 <div class="relative">
 	<input
 		bind:value={passwordValue}
-		class="border-1 h-[42px] w-[554px] rounded-md border-[#d4d1cb] p-2 placeholder-[#3e424a]"
+		class="h-[42px] w-[554px] rounded-md border-1 border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
 		type={passwordVisible ? 'text' : 'password'}
-		placeholder="Password"
+		placeholder="Password *"
 	/>
-	{#if passwordValue === ''}
-		<span class="absolute left-[90px] top-1/2 -translate-y-1/2 transform text-red-500">*</span>
-	{/if}
 	<button
 		type="button"
 		on:click={togglePassword}
 		aria-label={passwordVisible ? 'Hide password' : 'Show password'}
-		class="absolute right-3 top-1/2 -translate-y-1/2 transform"
+		class="absolute top-1/2 right-3 -translate-y-1/2 transform"
 	>
 		<svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path
@@ -117,16 +110,21 @@
 	</button>
 </div>
 {#if errorMessage}
-    <div class="text-red-500 text-sm">
-        {errorMessage}
-    </div>
+	<div class="text-sm text-red-500">
+		{errorMessage}
+	</div>
 {/if}
 
 <button
-    type="button"
-    on:click={handleLogin}
-    disabled={isLoading}
-    class="mt-4 h-[42px] w-[554px] rounded-lg bg-[#ff4000] text-white font-medium hover:bg-[#ff571f] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+	type="button"
+	on:click={handleLogin}
+	disabled={isLoading}
+	class="mt-4 h-[42px] w-[554px] rounded-lg bg-[#ff4000] font-medium text-white transition-colors hover:bg-[#ff571f] disabled:cursor-not-allowed disabled:bg-gray-400"
 >
-    {isLoading ? 'Logging in...' : 'Login'}
+	{isLoading ? 'Logging in...' : 'Login'}
 </button>
+
+
+<style>
+	
+</style>

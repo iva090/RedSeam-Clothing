@@ -27,6 +27,7 @@
 		isLoggedIn.set(false);
 		userAvatar.set(null);
 		dropdownOpen = false;
+		goto('/listing')
 	}
 
 	function openCartModal() {
