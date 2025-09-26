@@ -1,8 +1,8 @@
 <script>
-	import { goto } from '$app/navigation';
+    import { goto } from '$app/navigation';
     import cartImage from '$lib/assets/cartImage.png';
     import { api } from '$lib/axios/axios.js';
-    import { onMount } from 'svelte';
+    import { isLoggedIn } from '$lib/auth.js' 
 
     export let open = true;
     export let getCartItems;
@@ -37,7 +37,7 @@
 
         item.quantity = newQuantity;
 
-        cartItems = cartItems;
+        cartItems = [...cartItems]; 
 
         try {
             await api.patch(`/cart/products/${item.id}`, {
@@ -47,6 +47,7 @@
             });
         } catch (error) {
             console.error(error);
+            getCartItems(); 
         }
     }
 
@@ -75,12 +76,17 @@
             );
         } catch (error) {
             console.error(error);
+            getCartItems();
         }
     }
 
-    onMount(() => {
-        getCartItems();
-    });
+    $: {
+        if ($isLoggedIn) {
+            getCartItems();
+        } else {
+            cartItems = null;
+        }
+    }
 </script>
 
 {#if open}
@@ -88,7 +94,7 @@
         <div class="flex h-full w-full max-w-lg flex-col bg-[#f8f6f7] p-6 shadow-2xl">
             <div class="flex h-20 items-center justify-between">
                 <h3 class="h5">Shopping cart ({cartItems ? cartItems.length : 0})</h3>
-                <button onclick={closeModal} class="">
+                <button on:click={closeModal} class="">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-8 w-8"
@@ -111,7 +117,7 @@
                             <p class="text-surface-500">You've got nothing in your cart just yet...</p>
                         </div>
                         <button
-                            onclick={closeModal}
+                            on:click={closeModal}
                             class="mt-4 flex h-12 w-70 items-center justify-center rounded-xl bg-[#ff4000] font-medium text-white transition-colors hover:bg-[#ff571f] disabled:cursor-not-allowed disabled:bg-gray-400"
                         >
                             Start shopping
@@ -147,17 +153,17 @@
                                         >
                                             <button
                                                 class="text-lg text-gray-600"
-                                                onclick={() => decreaseQuantity(item)}
+                                                on:click={() => decreaseQuantity(item)}
                                                 disabled={item.quantity === 1}>-</button
                                             >
                                             <span class="text-sm">{item.quantity}</span>
-                                            <button onclick={() => increaseQuantity(item)} class="text-lg text-gray-600"
+                                            <button on:click={() => increaseQuantity(item)} class="text-lg text-gray-600"
                                                 >+</button
                                             >
                                         </div>
                                         <button
                                             class="mt-2 font-semibold text-gray-500"
-                                            onclick={() => deleteItem(item)}
+                                            on:click={() => deleteItem(item)}
                                         >
                                             Remove
                                         </button>
@@ -185,8 +191,11 @@
                     </div>
                     <button
                         class="px-5 mt-6 flex h-14 w-full items-center justify-center rounded-xl bg-[#ff4000] text-lg text-white transition-colors hover:bg-[#ff571f]"
-						onclick={() => goto('/checkout')}
-					>
+                        on:click={() => {
+                            goto('/checkout');
+                            closeModal()
+                            }}
+                    >
                         Go to checkout
                     </button>
                 </div>

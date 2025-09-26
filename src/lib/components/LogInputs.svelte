@@ -46,7 +46,8 @@
 				if (browser) {
 					const userData = {
 						token: response.data.token,
-						avatar: response.data.user.avatar
+						avatar: response.data.user.avatar,
+						email: response.data.user.email
 					};
 					localStorage.setItem('userData', JSON.stringify(userData));
 				}
