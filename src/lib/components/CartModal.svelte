@@ -1,18 +1,27 @@
 <script>
+	import { goto } from '$app/navigation';
     import cartImage from '$lib/assets/cartImage.png';
     import { api } from '$lib/axios/axios.js';
     import { onMount } from 'svelte';
-    
+
     export let open = true;
     export let getCartItems;
-    
+
     let cartItems = null;
+
+    const deliveryFee = 5;
+
+    $: subtotal = cartItems 
+        ? cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+        : 0;
+
+    $: total = subtotal + deliveryFee;
 
     function closeModal() {
         open = false;
     }
-    
-    getCartItems = async () => { 
+
+    getCartItems = async () => {
         try {
             const response = await api.get('/cart');
             if (response.status === 200) {
@@ -21,15 +30,15 @@
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
     async function updateQuantity(item, newQuantity) {
         if (newQuantity < 1) return;
-        
+
         item.quantity = newQuantity;
-        
-        cartItems = cartItems; 
-        
+
+        cartItems = cartItems;
+
         try {
             await api.patch(`/cart/products/${item.id}`, {
                 quantity: newQuantity,
@@ -38,7 +47,6 @@
             });
         } catch (error) {
             console.error(error);
-            getCartItems(); 
         }
     }
 
@@ -60,7 +68,7 @@
                     size: item.size
                 }
             });
-            
+
             cartItems = cartItems.filter(
                 (cartItem) =>
                     !(cartItem.id === item.id && cartItem.color === item.color && cartItem.size === item.size)
@@ -94,7 +102,7 @@
                     </svg>
                 </button>
             </div>
-            <div class="flex-1 overflow-y-auto">
+            <div class="flex-1 overflow-y-auto pb-4">
                 {#if !cartItems || cartItems.length === 0}
                     <div class="mt-20 flex h-1/2 flex-col items-center p-4 text-center">
                         <div class="flex flex-col items-center">
@@ -111,7 +119,7 @@
                     </div>
                 {:else}
                     <div>
-                        {#each cartItems as item}
+                        {#each cartItems as item (item.id + item.color + item.size)}
                             <div class="mb-4 flex items-start gap-4 rounded-lg p-4">
                                 <div
                                     class="flex h-38 w-auto flex-shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 border-gray-200 bg-gray-100 bg-white"
@@ -125,11 +133,13 @@
                                 <div class="mt-2 flex flex-grow flex-col justify-between">
                                     <div class="flex justify-between">
                                         <h3 class="text-base font-semibold text-gray-800 capitalize">{item.name}</h3>
-                                        <span class="text-lg font-bold text-gray-800">${(item.price * item.quantity).toFixed(2)}</span>
+                                        <span class="text-lg font-bold text-gray-800"
+                                            >$ {(item.price * item.quantity).toFixed(2)}</span
+                                        >
                                     </div>
                                     <div class="flex flex-col">
-                                        <p class="text-sm text-gray-500">Color: {item.color}</p>
-                                        <p class="mt-1 mb-1 text-sm text-gray-500">Size: {item.size}</p>
+                                        <p class="text-sm text-gray-500 capitalize">{item.color}</p>
+                                        <p class="mt-1 mb-1 text-sm text-gray-500">{item.size}</p>
                                     </div>
                                     <div class="flex justify-between">
                                         <div
@@ -154,11 +164,33 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr class="border-gray-300 my-2" />
                         {/each}
                     </div>
                 {/if}
             </div>
+
+            {#if cartItems && cartItems.length > 0}
+                <div class="flex-shrink-0 pt-6 bg-[#f8f6f7] space-y-3">
+                    <div class="flex justify-between text-base font-medium text-gray-900">
+                        <p>Items subtotal</p>
+                        <p>${subtotal.toFixed(2)}</p>
+                    </div>
+                    <div class="flex justify-between text-base font-medium text-gray-900">
+                        <p>Delivery</p>
+                        <p>${deliveryFee.toFixed(2)}</p>
+                    </div>
+                    <div class="flex justify-between text-xl font-bold text-gray-900 mb-15 pt-2">
+                        <p>Total</p>
+                        <p>${total.toFixed(2)}</p>
+                    </div>
+                    <button
+                        class="px-5 mt-6 flex h-14 w-full items-center justify-center rounded-xl bg-[#ff4000] text-lg text-white transition-colors hover:bg-[#ff571f]"
+						onclick={() => goto('/checkout')}
+					>
+                        Go to checkout
+                    </button>
+                </div>
+            {/if}
         </div>
     </div>
 {/if}
