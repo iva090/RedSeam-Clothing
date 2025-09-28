@@ -73,6 +73,7 @@
 		bind:value={emailValue}
 		class="h-[42px] w-[554px] rounded-md border-1 border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
+		minlength="3"
 		type="email"
 		placeholder="Email *"
 	/>
@@ -82,6 +83,7 @@
 		bind:value={passwordValue}
 		class="h-[42px] w-[554px] rounded-md border-1 border-[#d4d1cb] p-2 placeholder-[#3e424a]"
 		required
+		minlength="3"
 		type={passwordVisible ? 'text' : 'password'}
 		placeholder="Password *"
 	/>

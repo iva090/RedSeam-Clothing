@@ -121,7 +121,7 @@
             </div>
             <div class="h-full w-full">
                 <h1 class="mb-2 text-4xl font-bold capitalize text-[#10151f]">{productData.name}</h1>
-                <p class="mb-4 text-2xl font-semibold text-[#10151f]">$ {productData.price}</p>
+                <p class="mb-4 text-2xl font-semibold text-[#10151f]">$ {Math.round(productData.price)}</p>
                 <div class="product-details-container">
                     <ColorSelector
                         {variants}

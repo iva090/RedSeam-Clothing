@@ -140,7 +140,7 @@
                                     <div class="flex justify-between">
                                         <h3 class="text-base font-semibold text-gray-800 capitalize">{item.name}</h3>
                                         <span class="text-lg font-bold text-gray-800"
-                                            >$ {(item.price * item.quantity).toFixed(2)}</span
+                                            >${(item.price * item.quantity)}</span
                                         >
                                     </div>
                                     <div class="flex flex-col">
