@@ -136,7 +136,7 @@
                                         class="max-h-full max-w-full rounded-lg object-contain p-1"
                                     />
                                 </div>
-                                <div class="mt-2 flex flex-grow flex-col justify-between">
+                                <div class=" flex flex-grow flex-col justify-between">
                                     <div class="flex justify-between">
                                         <h3 class="text-base font-semibold text-gray-800 capitalize">{item.name}</h3>
                                         <span class="text-lg font-bold text-gray-800"
@@ -145,7 +145,7 @@
                                     </div>
                                     <div class="flex flex-col">
                                         <p class="text-sm text-gray-500 capitalize">{item.color}</p>
-                                        <p class="mt-1 mb-1 text-sm text-gray-500">{item.size}</p>
+                                        <p class="mt-1 text-sm text-gray-500">{item.size}</p>
                                     </div>
                                     <div class="flex justify-between">
                                         <div
@@ -179,15 +179,15 @@
                 <div class="flex-shrink-0 pt-6 bg-[#f8f6f7] space-y-3">
                     <div class="flex justify-between text-base font-medium text-gray-900">
                         <p>Items subtotal</p>
-                        <p>${subtotal.toFixed(2)}</p>
+                        <p>${subtotal}</p>
                     </div>
                     <div class="flex justify-between text-base font-medium text-gray-900">
                         <p>Delivery</p>
-                        <p>${deliveryFee.toFixed(2)}</p>
+                        <p>${deliveryFee}</p>
                     </div>
                     <div class="flex justify-between text-xl font-bold text-gray-900 mb-15 pt-2">
                         <p>Total</p>
-                        <p>${total.toFixed(2)}</p>
+                        <p>${total}</p>
                     </div>
                     <button
                         class="px-5 mt-6 flex h-14 w-full items-center justify-center rounded-xl bg-[#ff4000] text-lg text-white transition-colors hover:bg-[#ff571f]"

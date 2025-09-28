@@ -30,7 +30,7 @@
                         <div class="flex justify-between">
                             <h3 class="text-base font-semibold text-gray-800 capitalize">{item.name}</h3>
                             <span class="text-lg font-bold text-gray-800"
-                                >${(item.price * item.quantity).toFixed(2)}</span
+                                >${(item.price * item.quantity)}</span
                             >
                         </div>
                         <div class="flex flex-col">
@@ -68,15 +68,15 @@
             <div class="space-y-3">
                 <div class="flex justify-between text-base font-medium text-gray-900">
                     <p>Items subtotal</p>
-                    <p>${subtotal.toFixed(2)}</p>
+                    <p>${subtotal}</p>
                 </div>
                 <div class="flex justify-between text-base font-medium text-gray-900">
                     <p>Delivery</p>
-                    <p>${deliveryFee.toFixed(2)}</p>
+                    <p>${deliveryFee}</p>
                 </div>
                 <div class="mb-15 flex justify-between pt-2 text-xl font-bold text-gray-900">
                     <p>Total</p>
-                    <p>${total.toFixed(2)}</p>
+                    <p>${total}</p>
                 </div>
                 <button
                     on:click={handleSubmit}
