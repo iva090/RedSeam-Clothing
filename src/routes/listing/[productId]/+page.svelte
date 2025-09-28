@@ -8,6 +8,9 @@
     import SizeSelector from '$lib/components/SizeSelector.svelte';
     import AddToCart from '$lib/components/AddToCart.svelte';
     import { isLoggedIn } from '$lib/auth';
+	import { resolve } from '$app/paths';
+
+    const listing = resolve('/listing')
 
     let product = parseInt(page.params.productId);
     let productData = null;
@@ -99,7 +102,7 @@
 </script>
 
 <div class="ml-25 mr-25 mb-10">
-    <div class="mb-10"><a href="/listing">Listing</a> / Product</div>
+    <div class="mb-10"><a href={listing}>Listing</a> / Product</div>
     {#if selectedVariant}
         <div class="gap-50 grid grid-cols-2">
             <div class="grid grid-cols-6 gap-5">

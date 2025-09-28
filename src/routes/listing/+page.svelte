@@ -6,6 +6,7 @@
 	import ProductCard from '$lib/components/ProductCard.svelte';
 	import Pagination from '$lib/components/Pagination.svelte';
 	import { page } from '$app/stores';
+	import { resolve } from '$app/paths';
 
 	export let getCartItems;
 	let products = [];
@@ -114,7 +115,7 @@
 	}
 
 	function viewProductDetails(productId) {
-		goto(`/listing/${productId}`);
+		goto(resolve(`/listing/${productId}`));
 	}
 
 	let cartItems = [];
@@ -146,12 +147,12 @@
 		<h1 class="text-2xl font-bold">Products</h1>
 		<div class="relative flex items-center space-x-4 text-sm font-medium text-gray-700">
 			{#if totalProducts > 0}
-                {#if currentPage !== 10}
-				    <p class="mr-4 text-gray-500">Showing 1-10 of 100 results</p>
-                {:else}
-                    <p class="mr-4 text-gray-500">Showing 1-4 of 100 results</p>
-                {/if}
-            {/if}
+				{#if currentPage !== 10}
+					<p class="mr-4 text-gray-500">Showing 1-10 of 100 results</p>
+				{:else}
+					<p class="mr-4 text-gray-500">Showing 1-4 of 100 results</p>
+				{/if}
+			{/if}
 			<button on:click|stopPropagation={toggleFilter} class="flex items-center gap-1">
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -245,7 +246,10 @@
 		<div class="mb-4 flex items-center gap-2">
 			<div class="rounded-full border px-4 py-2 text-sm font-medium shadow-sm">
 				Price: {minPrice || 'Min'} - {maxPrice || 'Max'}
-				<button on:click={() => updateUrl(1, sortOption, null, null)} class="ml-2 font-bold text-gray-500 hover:text-gray-800">
+				<button
+					on:click={() => updateUrl(1, sortOption, null, null)}
+					class="ml-2 font-bold text-gray-500 hover:text-gray-800"
+				>
 					&times;
 				</button>
 			</div>

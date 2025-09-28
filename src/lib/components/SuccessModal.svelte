@@ -1,13 +1,13 @@
 <script>
     //@ts-nocheck
 	import { goto } from "$app/navigation";
-
+	import { resolve } from '$app/paths';
 
     let { open } = $props(); 
 
     function close() {
         open = false
-        goto('/listing')
+        goto(resolve('/listing'))
     }
 </script>
 

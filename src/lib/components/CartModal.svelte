@@ -3,6 +3,7 @@
     import cartImage from '$lib/assets/cartImage.png';
     import { api } from '$lib/axios/axios.js';
     import { isLoggedIn } from '$lib/auth.js' 
+    import { resolve } from '$app/paths';
 
     export let open = true;
     export let getCartItems;
@@ -192,7 +193,7 @@
                     <button
                         class="px-5 mt-6 flex h-14 w-full items-center justify-center rounded-xl bg-[#ff4000] text-lg text-white transition-colors hover:bg-[#ff571f]"
                         on:click={() => {
-                            goto('/checkout');
+                            goto(resolve('/checkout'));
                             closeModal()
                             }}
                     >

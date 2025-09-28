@@ -5,7 +5,10 @@
 	import { isLoggedIn, userAvatar } from '$lib/auth';
 	import { goto } from '$app/navigation';
 	import CartModal from './CartModal.svelte';
+	import { resolve } from '$app/paths';
 
+	const listing = resolve('/listing');
+	const login = resolve('/login');
 	let dropdownOpen = false;
 	let isCartModalOpen = false;
 
@@ -27,7 +30,7 @@
 		isLoggedIn.set(false);
 		userAvatar.set(null);
 		dropdownOpen = false;
-		goto('/listing')
+		goto(resolve('/listing'));
 	}
 
 	function openCartModal() {
@@ -40,7 +43,7 @@
 <AppBar background="bg-white" base="h-[80px] mt-3">
 	{#snippet lead()}
 		<div class="ml-20 flex items-center gap-2">
-			<a href="/listing">
+			<a href={listing}>
 				<img src={logo} alt="logo" class="h-6" />
 			</a>
 			<p class="text-l font-semibold text-black">RedSeam Clothing</p>
@@ -61,7 +64,7 @@
 				<div class="relative inline-block text-left">
 					<div class="flex items-center">
 						<img
-							on:click={() => goto('/listing')}
+							on:click={() => goto(resolve('/listing'))}
 							class="h-6 w-6 cursor-pointer rounded-full object-cover"
 							src={$userAvatar ? $userAvatar : user}
 							alt="userAvatar"
@@ -92,7 +95,7 @@
 
 					{#if dropdownOpen}
 						<div
-							class="absolute right-0 z-50 mt-2 w-fit rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+							class="ring-opacity-5 absolute right-0 z-50 mt-2 w-fit rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none"
 							role="menu"
 							aria-orientation="vertical"
 							aria-labelledby="user-menu-button"
@@ -116,10 +119,10 @@
 		{:else}
 			<div class="mr-20 flex items-center gap-5">
 				<img src={user} alt="user" class="h-6" />
-				<a href="/login" class="text-l text-black">Log In</a>
+				<a href={login} class="text-l text-black">Log In</a>
 			</div>
 		{/if}
 	{/snippet}
 </AppBar>
 
-<CartModal bind:open={isCartModalOpen}/>
+<CartModal bind:open={isCartModalOpen} />

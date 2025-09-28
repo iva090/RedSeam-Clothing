@@ -3,6 +3,7 @@
 	import { api } from '$lib/axios/axios.js';
 	import { isLoggedIn, userAvatar } from '$lib/auth.js';
 	import { browser } from '$app/environment';
+	import { resolve } from '$app/paths';
 
 	let passwordVisible = false;
 	let emailValue = '';
@@ -57,7 +58,7 @@
 				passwordValue = '';
 				isLoggedIn.set(true);
 
-				await goto('..');
+				await goto(resolve('/listing'));
 			}
 		} catch (error) {
 			console.error('Login error:', error);
@@ -126,7 +127,5 @@
 	{isLoading ? 'Logging in...' : 'Login'}
 </button>
 
-
 <style>
-	
 </style>

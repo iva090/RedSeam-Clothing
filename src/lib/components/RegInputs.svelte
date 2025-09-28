@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/axios/axios';
 	import Avatar from '$lib/assets/regUser.png';
+	import { resolve } from '$app/paths';
 
 	let avatarPreview = $state(Avatar);
 
@@ -103,7 +104,7 @@
 				avatarFile = null;
 				avatarPreview = Avatar;
 				console.log('Registration Successful:', response.data);
-				await goto('/login');
+				await goto(resolve('/login'));
 			}
 		} catch (error) {
 			console.error('Registration error:', error);

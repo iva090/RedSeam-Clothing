@@ -1,7 +1,9 @@
 <script>
     import regImg from "$lib/assets/reg-img.png"
-
+	import { resolve } from '$app/paths';
 	import RegInputs from "$lib/components/RegInputs.svelte";
+
+    const login = resolve('/login');
 	let username = $state("");
 	let email = $state("");
 	let password = $state("");
@@ -23,7 +25,7 @@
                 <RegInputs />
             </div>
             <div class="mt-6 flex justify-center">
-                <p>Already member? <a href="/login" class="text-[#ff4000] font-[600]">Log In</a></p>
+                <p>Already member? <a href={login} class="text-[#ff4000] font-[600]">Log In</a></p>
             </div>
         </div>
     </div>
