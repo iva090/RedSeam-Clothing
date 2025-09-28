@@ -4,7 +4,7 @@ import adapter from '@sveltejs/adapter-static';
 const config = {
     kit: {
 		paths : {
-			base: process.env.NODE_env === 'production' ? '/RedSeam-Clothing' : '',
+			base: '/RedSeam-Clothing',
 		},
         adapter: adapter({
             fallback: '404.html', 
