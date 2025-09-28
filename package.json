@@ -1,6 +1,5 @@
 {
 	"name": "redberry-shopping-app",
-	"homepage": "https://iva090.github.io/RedSeam-Clothing",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -12,9 +11,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint .",
-		"predeploy": "npm run build",
-		"deploy": "gh-pages -d dist"
+		"lint": "prettier --check . && eslint ."
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
